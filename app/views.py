@@ -6,11 +6,11 @@ This file creates your application.
 """
 
 from app import app
+from app.image_getter import image_getter
 from flask import render_template, request, redirect, url_for, jsonify
 from bs4 import BeautifulSoup
 import requests
 import urlparse
-
 ###
 # Routing for your application.
 ###
@@ -30,6 +30,15 @@ def send_text_file(file_name):
     """Send your static text file."""
     file_dot_text = file_name + '.txt'
     return app.send_static_file(file_dot_text)
+
+@app.route('/api/thumbnails', methods = ["GET"])
+def get_urls():
+    image = image_getter()
+    return jsonify({"error": None,"message": "success","thumbnails":image})
+
+@app.route('/thumbnails/view')
+def display():
+    return render_template("display.html")
 
 
 @app.after_request
